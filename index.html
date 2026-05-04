@@ -1,0 +1,1729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AltiTok — Sensory-Aware Social Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        /* ============================================================
+           GLOBAL NEURON BACKGROUND
+           ============================================================ */
+        body {
+            background-color: #f6f8fc;
+            color: #333;
+            line-height: 1.6;
+            position: relative;
+        }
+
+        /* Fixed neuron canvas behind everything */
+        #neuron-bg {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* All sections sit above the canvas */
+        header, section, footer {
+            position: relative;
+            z-index: 1;
+        }
+
+        a { text-decoration: none; color: inherit; }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* ============================================================
+           HEADER
+           ============================================================ */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 32px;
+            background: rgba(255,255,255,0.88);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border-bottom: 1px solid rgba(148,163,184,0.16);
+            box-shadow: 0 14px 32px rgba(15, 23, 42, 0.08);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #0f172a;
+        }
+
+        .logo-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 14px;
+            color: inherit;
+            text-decoration: none;
+            padding: 4px 0;
+        }
+
+        .logo-img {
+            width: 48px;
+            height: 48px;
+            object-fit: contain;
+            border-radius: 16px;
+            background: rgba(38, 166, 154, 0.12);
+            padding: 8px;
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            line-height: 1.1;
+        }
+
+        .brand-name {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: #0f172a;
+        }
+
+        .brand-tagline {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.78rem;
+            color: #2dd4bf;
+            font-weight: 600;
+            margin-top: 3px;
+        }
+
+        nav.nav-links { display: flex; gap: 30px; }
+
+        nav.nav-links a {
+            font-size: 0.94rem;
+            font-weight: 600;
+            color: #52606d;
+            position: relative;
+            padding: 8px 0;
+            transition: color 0.25s ease, transform 0.25s ease;
+        }
+
+        nav.nav-links a:hover,
+        nav.nav-links a.active { color: #1e40af; transform: translateY(-1px); }
+
+        nav.nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px; left: 50%;
+            width: 0; height: 2px;
+            background: #1e40af;
+            transition: width 0.25s ease, transform 0.25s ease;
+            transform: translateX(-50%);
+            border-radius: 999px;
+        }
+
+        nav.nav-links a:hover::after,
+        nav.nav-links a.active::after { width: 70%; }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .icon-btn,
+        .icon-pill {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            border: 1px solid rgba(148,163,184,0.24);
+            background: rgba(255,255,255,0.95);
+            color: #334155;
+            cursor: pointer;
+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+        }
+
+        .icon-btn:hover,
+        .icon-pill:hover {
+            transform: translateY(-2px);
+            border-color: rgba(59,130,246,0.35);
+            box-shadow: 0 10px 24px rgba(59,130,246,0.12);
+            color: #1e3a8a;
+        }
+
+        .icon-btn svg,
+        .icon-pill svg {
+            width: 18px;
+            height: 18px;
+            stroke: currentColor;
+            stroke-width: 2;
+            fill: none;
+        }
+
+        .profile-btn { width: 44px; height: 44px; }
+
+        /* ============================================================
+           HERO SECTION
+           ============================================================ */
+        .hero {
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+            padding: 120px 20px 100px;
+            background: #fbfcff;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 16% 22%, rgba(56, 103, 214, 0.08), transparent 20%),
+                        radial-gradient(circle at 83% 18%, rgba(148, 163, 184, 0.06), transparent 20%),
+                        radial-gradient(circle at 50% 72%, rgba(96, 123, 139, 0.05), transparent 18%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .hero-pattern {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            opacity: 0.28;
+            z-index: 0;
+        }
+
+        .hero-pattern svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .hero .container {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(3rem, 5vw, 4.2rem);
+            color: #11213a;
+            margin-bottom: 18px;
+            line-height: 1.05;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            max-width: 860px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero p {
+            font-size: 1.05rem;
+            color: #475569;
+            margin: 0 auto 36px;
+            max-width: 640px;
+            line-height: 1.8;
+        }
+
+        .btn-primary {
+            background-color: #1a365d;
+            color: white;
+            padding: 13px 30px;
+            border-radius: 30px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 20px rgba(26, 54, 93, 0.3);
+            border: none;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 28px rgba(26, 54, 93, 0.4);
+        }
+
+        /* ============================================================
+           SECTION OVERLAYS — each section has its own tinted glass
+           ============================================================ */
+        .section-overlay-white {
+            background: rgba(255, 255, 255, 0.72);
+            backdrop-filter: blur(2px);
+        }
+
+        .section-overlay-offwhite {
+            background: rgba(240, 244, 252, 0.78);
+            backdrop-filter: blur(2px);
+        }
+
+        .section-overlay-warm {
+            background: rgba(245, 243, 238, 0.80);
+            backdrop-filter: blur(2px);
+        }
+
+        /* ============================================================
+           SECTION SEPARATORS
+           ============================================================ */
+        .section-sep {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(148,163,184,0.25), transparent);
+            margin: 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .section-label {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 40px 0;
+            margin: 0 auto;
+            max-width: 1200px;
+        }
+
+        /* ============================================================
+           CORE PRODUCTS — PREMIUM BENTO
+           ============================================================ */
+        .products-section {
+            padding: 100px 0 110px;
+        }
+
+        .products-header {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            margin-bottom: 56px;
+            gap: 32px;
+            flex-wrap: wrap;
+        }
+
+        .products-header-left { max-width: 520px; }
+
+        .products-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #f0f5ff;
+            border: 1px solid #dbeafe;
+            color: #1e40af;
+            font-family: 'Sora', sans-serif;
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 5px 14px 5px 10px;
+            border-radius: 100px;
+            margin-bottom: 18px;
+        }
+
+        .products-eyebrow-dot {
+            width: 6px; height: 6px;
+            background: #3b82f6;
+            border-radius: 50%;
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.75); }
+        }
+
+        .products-header h2 {
+            font-family: 'Sora', sans-serif;
+            font-size: 2.6rem;
+            font-weight: 700;
+            color: #0d1829;
+            line-height: 1.18;
+            letter-spacing: -0.03em;
+        }
+
+        .products-header h2 span { color: #2563eb; }
+
+        .products-header-right {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 16px;
+        }
+
+        .products-header-right p {
+            font-size: 0.95rem;
+            color: #64748b;
+            line-height: 1.7;
+            max-width: 320px;
+            text-align: right;
+        }
+
+        .products-view-all {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #1a365d;
+            border: 1.5px solid #cbd5e1;
+            padding: 9px 18px;
+            border-radius: 100px;
+            transition: all 0.25s ease;
+            background: white;
+        }
+
+        .products-view-all:hover {
+            background: #1a365d;
+            color: white;
+            border-color: #1a365d;
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px rgba(26,54,93,0.18);
+        }
+
+        .products-view-all svg {
+            width: 14px; height: 14px;
+            stroke: currentColor; fill: none;
+            stroke-width: 2.5;
+            stroke-linecap: round; stroke-linejoin: round;
+            transition: transform 0.2s ease;
+        }
+
+        .products-view-all:hover svg { transform: translate(2px, -2px); }
+
+        /* Bento grid */
+        .products-bento {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 16px;
+        }
+
+        .pcard {
+            background: linear-gradient(180deg, #fcfdff 0%, #f4f8ff 100%);
+            border-radius: 20px;
+            border: 1px solid rgba(226,232,240,0.95);
+            padding: 32px 30px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1),
+                        box-shadow 0.32s cubic-bezier(0.22, 1, 0.36, 1),
+                        border-color 0.32s ease;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            box-shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
+        }
+
+        .pcard:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 22px 52px rgba(15, 23, 42, 0.12);
+            border-color: rgba(194, 209, 233, 0.95);
+        }
+
+        .pcard-featured {
+            background: linear-gradient(145deg, #0d1829 0%, #1a365d 55%, #1e4080 100%);
+            border-color: transparent;
+            backdrop-filter: none;
+            box-shadow: none;
+        }
+
+        .pcard-1 { grid-column: 1 / 7; grid-row: 1; }
+        .pcard-2 { grid-column: 7 / 10; grid-row: 1; }
+        .pcard-3 { grid-column: 10 / 13; grid-row: 1; }
+        .pcard-4 { grid-column: 1 / 5; grid-row: 2; }
+        .pcard-5 { grid-column: 5 / 9; grid-row: 2; }
+        .pcard-6 { grid-column: 9 / 13; grid-row: 2; }
+
+        .pcard-featured {
+            background: linear-gradient(145deg, #0d1829 0%, #1a365d 55%, #1e4080 100%);
+            border-color: transparent;
+            backdrop-filter: none;
+        }
+
+        .pcard-featured:hover {
+            border-color: transparent;
+            box-shadow: 0 24px 56px rgba(13,24,41,0.35), 0 6px 16px rgba(13,24,41,0.2);
+        }
+
+        .pcard-featured::before {
+            content: '';
+            position: absolute;
+            top: -60px; right: -60px;
+            width: 280px; height: 280px;
+            background: radial-gradient(circle, rgba(59,130,246,0.22) 0%, transparent 65%);
+            pointer-events: none;
+            border-radius: 50%;
+        }
+
+        .pcard-icon {
+            width: 44px; height: 44px;
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.15rem;
+            flex-shrink: 0;
+            margin-bottom: 20px;
+            position: relative; z-index: 1;
+        }
+
+        .pcard-icon svg {
+            width: 24px; height: 24px;
+            stroke: currentColor;
+            stroke-width: 1.8;
+            fill: none;
+        }
+
+        .icon-brain    { background: linear-gradient(135deg, #dbeafe, #bfdbfe); }
+        .icon-app      { background: linear-gradient(135deg, #d1fae5, #a7f3d0); }
+        .icon-chat     { background: linear-gradient(135deg, #ede9fe, #ddd6fe); }
+        .icon-support  { background: linear-gradient(135deg, #fef3c7, #fde68a); }
+        .icon-research { background: linear-gradient(135deg, #e0f2fe, #bae6fd); }
+        .icon-social   { background: linear-gradient(135deg, #fce7f3, #fbcfe8); }
+        .icon-featured {
+            background: rgba(255,255,255,0.12);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.18);
+        }
+
+        .pcard-badge {
+            display: inline-flex; align-items: center; gap: 5px;
+            font-size: 0.68rem; font-weight: 600;
+            letter-spacing: 0.06em; text-transform: uppercase;
+            padding: 4px 10px;
+            border-radius: 100px;
+            margin-bottom: 22px;
+            align-self: flex-start;
+            position: relative; z-index: 1;
+        }
+
+        .badge-flagship {
+            background: rgba(59,130,246,0.18);
+            color: #93c5fd;
+            border: 1px solid rgba(147,197,253,0.25);
+        }
+
+        .pcard-body {
+            flex: 1; display: flex; flex-direction: column;
+            position: relative; z-index: 1;
+        }
+
+        .pcard-title {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.05rem; font-weight: 700;
+            color: #0d1829;
+            letter-spacing: -0.02em;
+            margin-bottom: 8px; line-height: 1.3;
+        }
+
+        .pcard-featured .pcard-title {
+            font-size: 1.45rem; color: #ffffff; margin-bottom: 12px;
+        }
+
+        .pcard-desc {
+            font-size: 0.835rem; color: #64748b;
+            line-height: 1.65; flex: 1; margin-bottom: 24px;
+        }
+
+        .pcard-featured .pcard-desc {
+            color: rgba(255,255,255,0.65); font-size: 0.88rem;
+        }
+
+        .pcard-stats { display: flex; gap: 10px; margin-bottom: 24px; }
+
+        .stat-chip {
+            background: rgba(255,255,255,0.09);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 10px;
+            padding: 8px 14px;
+            display: flex; flex-direction: column; gap: 2px;
+        }
+
+        .stat-val {
+            font-family: 'Sora', sans-serif;
+            font-size: 1rem; font-weight: 700;
+            color: #fff; line-height: 1;
+        }
+
+        .stat-lbl {
+            font-size: 0.67rem;
+            color: rgba(255,255,255,0.5); letter-spacing: 0.04em;
+        }
+
+        .pcard-cta {
+            display: flex; align-items: center;
+            justify-content: space-between;
+            margin-top: auto;
+        }
+
+        .pcard-link {
+            font-size: 0.82rem; font-weight: 600;
+            color: #2563eb;
+            display: inline-flex; align-items: center; gap: 5px;
+            transition: gap 0.2s ease, color 0.2s ease;
+        }
+
+        .pcard:hover .pcard-link { gap: 9px; color: #1a365d; }
+        .pcard-featured .pcard-link { color: rgba(255,255,255,0.8); }
+        .pcard-featured:hover .pcard-link { color: #ffffff; gap: 9px; }
+
+        .pcard-link-arrow {
+            font-size: 0.95rem;
+            transition: transform 0.2s ease;
+            display: inline-block;
+        }
+
+        .pcard:hover .pcard-link-arrow { transform: translate(3px, -2px); }
+
+        .pcard-tag {
+            font-size: 0.7rem; font-weight: 500;
+            color: #94a3b8; letter-spacing: 0.04em;
+        }
+
+        .pcard-corner-deco {
+            position: absolute; bottom: 0; right: 0;
+            width: 90px; height: 90px;
+            opacity: 0.06; pointer-events: none;
+        }
+
+        .pcard-featured .pcard-corner-deco { opacity: 0.12; width: 130px; height: 130px; }
+
+        .pcard-divider {
+            height: 1px;
+            background: linear-gradient(90deg, #e8edf5 0%, transparent 100%);
+            margin: 20px 0;
+        }
+
+        .pcard-featured .pcard-divider {
+            background: linear-gradient(90deg, rgba(255,255,255,0.12) 0%, transparent 100%);
+        }
+
+        /* ============================================================
+           SECTION HEADINGS
+           ============================================================ */
+        .section-header { text-align: center; margin-bottom: 48px; }
+
+        .section-header .eyebrow {
+            display: inline-flex; align-items: center; gap: 6px;
+            font-size: 0.7rem; font-weight: 600;
+            letter-spacing: 0.1em; text-transform: uppercase;
+            color: #2563eb;
+            background: #eff6ff;
+            border: 1px solid #dbeafe;
+            padding: 4px 12px; border-radius: 100px;
+            margin-bottom: 14px;
+        }
+
+        .section-header h2 {
+            font-family: 'Sora', sans-serif;
+            font-size: 2rem; font-weight: 700;
+            color: #0d1829; margin-bottom: 10px;
+            letter-spacing: -0.025em;
+        }
+
+        .section-header p { color: #64748b; font-size: 0.95rem; max-width: 480px; margin: 0 auto; }
+
+        /* ============================================================
+           ACCESSIBILITY SECTION — REDESIGNED
+           ============================================================ */
+        .accessibility-section {
+            padding: 90px 0 100px;
+        }
+
+        .access-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 8px;
+        }
+
+        .access-card {
+            background: rgba(255,255,255,0.9);
+            border-radius: 18px;
+            border: 1px solid rgba(226,232,240,0.8);
+            padding: 28px 26px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: transform 0.3s cubic-bezier(0.22,1,0.36,1),
+                        box-shadow 0.3s ease,
+                        border-color 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .access-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 16px 40px rgba(15,30,60,0.09);
+            border-color: #bfdbfe;
+        }
+
+        /* Subtle top-accent bar per card */
+        .access-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            border-radius: 18px 18px 0 0;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .access-card:hover::before { opacity: 1; }
+
+        .ac-moon::before   { background: linear-gradient(90deg, #818cf8, #6366f1); }
+        .ac-motion::before { background: linear-gradient(90deg, #34d399, #10b981); }
+        .ac-contrast::before { background: linear-gradient(90deg, #f59e0b, #d97706); }
+        .ac-dyslexia::before { background: linear-gradient(90deg, #f472b6, #ec4899); }
+        .ac-reader::before  { background: linear-gradient(90deg, #38bdf8, #0ea5e9); }
+        .ac-ui::before      { background: linear-gradient(90deg, #a78bfa, #7c3aed); }
+
+        .access-icon-wrap {
+            width: 48px; height: 48px;
+            border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.3rem;
+            margin-bottom: 18px;
+            flex-shrink: 0;
+        }
+
+        .access-icon-wrap svg {
+            width: 24px; height: 24px;
+            stroke: currentColor;
+            stroke-width: 1.8;
+            fill: none;
+        }
+
+        .ai-moon     { background: linear-gradient(135deg, #eef2ff, #e0e7ff); }
+        .ai-motion   { background: linear-gradient(135deg, #d1fae5, #a7f3d0); }
+        .ai-contrast { background: linear-gradient(135deg, #fef3c7, #fde68a); }
+        .ai-dyslexia { background: linear-gradient(135deg, #fce7f3, #fbcfe8); }
+        .ai-reader   { background: linear-gradient(135deg, #e0f2fe, #bae6fd); }
+        .ai-ui       { background: linear-gradient(135deg, #ede9fe, #ddd6fe); }
+
+        .access-card-title {
+            font-family: 'Sora', sans-serif;
+            font-size: 0.95rem; font-weight: 700;
+            color: #0d1829;
+            margin-bottom: 8px;
+            letter-spacing: -0.015em;
+        }
+
+        .access-card-desc {
+            font-size: 0.82rem; color: #64748b;
+            line-height: 1.6; flex: 1;
+            margin-bottom: 20px;
+        }
+
+        /* Toggle switch indicator */
+        .access-card-footer {
+            display: flex; align-items: center;
+            justify-content: space-between;
+            padding-top: 14px;
+            border-top: 1px solid #f1f5f9;
+        }
+
+        .access-status {
+            font-size: 0.72rem; font-weight: 600;
+            color: #94a3b8; letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .toggle-pill {
+            display: flex; align-items: center;
+            gap: 0;
+            width: 36px; height: 20px;
+            border-radius: 100px;
+            background: #e2e8f0;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .toggle-pill.on { background: #2563eb; }
+
+        .toggle-knob {
+            position: absolute;
+            left: 3px;
+            width: 14px; height: 14px;
+            border-radius: 50%;
+            background: white;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+            transition: left 0.25s cubic-bezier(0.22,1,0.36,1);
+        }
+
+        .toggle-pill.on .toggle-knob { left: 19px; }
+
+        /* WCAG badge */
+        .wcag-badge {
+            font-size: 0.65rem; font-weight: 700;
+            letter-spacing: 0.06em;
+            color: #0369a1;
+            background: #e0f2fe;
+            border: 1px solid #bae6fd;
+            padding: 2px 8px;
+            border-radius: 100px;
+        }
+
+        /* ============================================================
+           HOW IT WORKS
+           ============================================================ */
+        .how-it-works { padding: 80px 0 90px; }
+
+        .steps-container {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 22px;
+            position: relative;
+            margin-top: 48px;
+        }
+
+        /* Connector line between steps */
+        .steps-container::before {
+            content: '';
+            position: absolute;
+            top: 35px; left: 6%; right: 6%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #cbd5e1 20%, #cbd5e1 80%, transparent);
+            z-index: 0;
+        }
+
+        .step {
+            background: linear-gradient(180deg, #fcfdff 0%, #f4f8ff 100%);
+            border: 1px solid rgba(226,232,240,0.9);
+            border-radius: 28px;
+            padding: 32px 22px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 16px;
+            position: relative;
+            z-index: 1;
+            min-height: 260px;
+            box-shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
+        }
+
+        .step-num-wrap {
+            width: 56px; height: 56px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.9);
+            border: 1.5px solid #dbeafe;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 20px;
+            position: relative; z-index: 1;
+            box-shadow: 0 4px 12px rgba(37,99,235,0.1);
+        }
+
+        .step-num {
+            font-family: 'Sora', sans-serif;
+            font-size: 1rem; font-weight: 700;
+            color: #2563eb;
+        }
+
+        .step-icon {
+            width: 54px; height: 54px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #eff6ff;
+            margin-bottom: 0;
+            box-shadow: 0 10px 30px rgba(59,130,246,0.08);
+        }
+        .step-icon svg { width: 28px; height: 28px; stroke: #2563eb; stroke-width: 1.9; fill: none; }
+        .step h4 { font-size: 1rem; font-weight: 700; color: #111827; margin-bottom: 0; }
+        .step p { font-size: 0.9rem; color: #475569; line-height: 1.8; margin: 0; }
+
+        /* ============================================================
+           CORE SERVICE CARDS
+           ============================================================ */
+        .services-section { padding: 0 0 80px; }
+
+        .grid-2x2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .service-card {
+            border-radius: 20px;
+            padding: 40px 34px;
+            color: #0f172a;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 230px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(180deg, #f4f7ff 0%, #e5efff 100%);
+            border: 1px solid rgba(194, 209, 233, 0.95);
+        }
+
+        .service-card-icon {
+            width: 48px; height: 48px;
+            border-radius: 16px;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 18px;
+            background: rgba(59,130,246,0.14);
+            color: #1e40af;
+            flex-shrink: 0;
+        }
+
+        .service-card-icon svg {
+            width: 26px; height: 26px;
+            stroke: currentColor;
+            stroke-width: 1.8;
+            fill: none;
+        }
+
+        .service-card::after {
+            content: '';
+            position: absolute;
+            bottom: -40px; right: -40px;
+            width: 150px; height: 150px;
+            border-radius: 50%;
+            background: rgba(59,130,246,0.08);
+            pointer-events: none;
+        }
+
+        .service-card:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.15); }
+
+        .service-card.dark-blue,
+        .service-card.dark-brown,
+        .service-card.gradient-brown,
+        .service-card.light-blue { background: linear-gradient(180deg, #f8fbff 0%, #eef6ff 100%); }
+
+        .service-card h3 { font-family: 'Sora', sans-serif; font-size: 1.25rem; margin: 14px 0 10px; font-weight: 700; }
+        .service-card p  { font-size: 0.85rem; opacity: 0.8; margin-bottom: 22px; line-height: 1.55; }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.35);
+            color: #000000;
+            padding: 10px 22px;
+            border-radius: 20px;
+            cursor: pointer;
+            width: 100%;
+            text-align: center;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            font-size: 0.88rem;
+            box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+        }
+
+        .btn-outline:hover {
+            background: rgba(255,255,255,0.15);
+            border-color: rgba(255,255,255,0.7);
+        }
+
+        /* ============================================================
+           FOOTER
+           ============================================================ */
+        footer {
+            background: #d7d9f5;
+            padding: 60px 40px 20px;
+            font-size: 0.92rem;
+            color: #475569;
+            border-top: 1px solid rgba(148,163,184,0.12);
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto 40px;
+        }
+
+        .footer-col h5,
+        .footer-title {
+            font-size: 0.9rem;
+            color: #102a43;
+            margin-bottom: 18px;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+        }
+
+        .footer-col p,
+        .footer-col li,
+        .footer-bottom {
+            color: #475569;
+            line-height: 1.8;
+        }
+
+        .footer-col ul { list-style: none; padding: 0; margin: 0; }
+        .footer-col ul li { margin-bottom: 12px; }
+        .footer-col ul li a {
+            color: #475569;
+            transition: color 0.25s ease;
+            font-weight: 500;
+        }
+        .footer-col ul li a:hover { color: #1e40af; text-decoration: underline; }
+
+        .footer-contact-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .footer-contact-list li {
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #334155;
+            font-weight: 500;
+        }
+
+        .footer-contact-list li svg {
+            width: 16px;
+            height: 16px;
+            stroke: #1e40af;
+            stroke-width: 1.8;
+            fill: none;
+        }
+
+        .footer-social-links {
+            display: flex;
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .footer-social-links a {
+            color: #475569;
+            font-weight: 600;
+            transition: color 0.25s ease;
+        }
+
+        .footer-social-links a:hover { color: #1e40af; }
+
+        .newsletter-input {
+            width: 100%; padding: 12px 14px;
+            border: 1px solid rgba(148,163,184,0.4);
+            border-radius: 12px;
+            margin-bottom: 14px;
+            outline: none;
+            transition: border-color 0.3s ease;
+            background: white;
+            font-size: 0.95rem;
+            color: #102a43;
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            border-top: 1px solid rgba(148,163,184,0.12);
+            padding-top: 20px;
+            font-size: 0.88rem;
+            color: #64748b;
+        }
+
+        .footer-links a {
+            margin-left: 20px;
+            color: #475569;
+            font-weight: 500;
+            transition: color 0.25s ease;
+        }
+
+        .footer-links a:hover { color: #1e40af; }
+
+        .newsletter-input:focus { border-color: #1a365d; }
+
+        .btn-subscribe {
+            width: 100%; padding: 10px;
+            background: #1a365d; color: white;
+            border: none; border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            font-weight: 600; font-size: 0.88rem;
+        }
+
+        .btn-subscribe:hover { background: #2c5282; }
+
+        .footer-bottom {
+            display: flex; justify-content: space-between;
+            max-width: 1200px; margin: 0 auto;
+            border-top: 1px solid #d1d5db; padding-top: 20px;
+        }
+
+        .footer-links a { margin-left: 15px; }
+        .footer-links a:hover { color: #1a365d; }
+    </style>
+</head>
+<body>
+
+    <!-- ============================================================
+         GLOBAL NEURON BACKGROUND CANVAS
+         ============================================================ -->
+    <canvas id="neuron-bg"></canvas>
+
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            <a href="#" class="logo-link">
+                <img src="AltiTok Logo- Small.png" alt="AltiTok logo" class="logo-img">
+                <div class="logo-text">
+                    <span class="brand-name">AltiTok</span>
+                    <span class="brand-tagline">Sensory-Aware Social Platform.</span>
+                </div>
+            </a>
+        </div>
+        
+        <nav class="nav-links">
+            <a href="#" class="active">Home</a>
+            <a href="#">Solutions</a>
+            <a href="#">Features</a>
+            <a href="#">Case Studies</a>
+            <a href="#">Help</a>
+            <a href="#">Blog</a>
+        </nav>
+
+        <div class="header-controls">
+            <button class="icon-btn" aria-label="Notifications">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 22a2 2 0 0 0 2-2H10a2 2 0 0 0 2 2z"/><path d="M18 16v-5a6 6 0 0 0-12 0v5l-2 2v1h16v-1l-2-2z"/></svg>
+            </button>
+            <button class="icon-btn" aria-label="Messages">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4 4h16v12H7l-3 3V4z"/></svg>
+            </button>
+            <button class="icon-pill" aria-label="Language selection">EN</button>
+            <button class="icon-btn profile-btn" aria-label="Profile">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/><path d="M4 20c0-4 3-6 8-6s8 2 8 6"/></svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-pattern" aria-hidden="true">
+            <svg viewBox="0 0 900 520" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+                <g stroke="#5b7bb0" stroke-width="1" fill="none" opacity="0.3">
+                    <path d="M95 120L220 80" />
+                    <path d="M220 80L310 170" />
+                    <path d="M310 170L480 130" />
+                    <path d="M480 130L580 210" />
+                    <path d="M580 210L730 170" />
+                    <path d="M95 120L170 230" />
+                    <path d="M580 210L670 290" />
+                </g>
+                <g fill="#dbe5ff" opacity="0.65">
+                    <circle cx="95" cy="120" r="5" />
+                    <circle cx="220" cy="80" r="4" />
+                    <circle cx="310" cy="170" r="4.5" />
+                    <circle cx="480" cy="130" r="6" />
+                    <circle cx="580" cy="210" r="4" />
+                    <circle cx="730" cy="170" r="5" />
+                    <circle cx="670" cy="290" r="4" />
+                </g>
+                <g fill="#b7c8e6" opacity="0.45">
+                    <circle cx="540" cy="80" r="3" />
+                    <circle cx="150" cy="280" r="3.5" />
+                    <circle cx="820" cy="260" r="3" />
+                </g>
+            </svg>
+        </div>
+        <div class="container">
+            <h1>Digital tools designed for neurodivergent minds</h1>
+            <p>Supportive, sensory-friendly technology crafted to improve wellbeing with calm, intuitive digital experiences.</p>
+            <button class="btn-primary">Explore the platform <span>↗</span></button>
+        </div>
+    </section>
+
+    <div class="section-sep"></div>
+
+    <!-- Core Products -->
+    <section class="products-section section-overlay-white">
+        <div class="container">
+            <div class="products-header">
+                <div class="products-header-left">
+                    <div class="products-eyebrow">
+                        <span class="products-eyebrow-dot"></span>
+                        Core Products
+                    </div>
+                    <h2>Everything you need<br>to <span>thrive digitally</span></h2>
+                </div>
+                <div class="products-header-right">
+                    <p>Our sensory-aware tools work together to power a comprehensive support system built for every mind.</p>
+                    <a href="#" class="products-view-all">
+                        View all products
+                        <svg viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+                    </a>
+                </div>
+            </div>
+
+            <div class="products-bento">
+                <!-- Card 1: NuroTok — featured -->
+                <div class="pcard pcard-1 pcard-featured">
+                    <div class="pcard-icon icon-featured">🧠</div>
+                    <div class="pcard-badge badge-flagship">⚡ Flagship</div>
+                    <div class="pcard-body">
+                        <div class="pcard-title">NuroTok</div>
+                        <div class="pcard-desc">Your sensory cognitive hub. Custom notifications, adaptive interface networks, and deep cross-platform integration — all designed for neurodivergent workflows.</div>
+                        <div class="pcard-stats">
+                            <div class="stat-chip"><span class="stat-val">40K+</span><span class="stat-lbl">Active users</span></div>
+                            <div class="stat-chip"><span class="stat-val">99.9%</span><span class="stat-lbl">Uptime</span></div>
+                            <div class="stat-chip"><span class="stat-val">4.9 ★</span><span class="stat-lbl">Rating</span></div>
+                        </div>
+                        <div class="pcard-divider"></div>
+                        <div class="pcard-cta">
+                            <a href="#" class="pcard-link">Explore NuroTok <span class="pcard-link-arrow">↗</span></a>
+                            <span class="pcard-tag" style="color:rgba(255,255,255,0.35);">Hub · Cognitive</span>
+                        </div>
+                    </div>
+                    <svg class="pcard-corner-deco" viewBox="0 0 90 90" fill="none"><circle cx="90" cy="90" r="80" stroke="white" stroke-width="1.5"/><circle cx="90" cy="90" r="55" stroke="white" stroke-width="1.5"/><circle cx="90" cy="90" r="30" stroke="white" stroke-width="1.5"/></svg>
+                </div>
+
+                <!-- Card 2: Core Logging App -->
+                <div class="pcard pcard-2">
+                    <div class="pcard-icon icon-app">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="7" y="4" width="10" height="16" rx="2" />
+                            <circle cx="12" cy="18" r="1" fill="currentColor" />
+                        </svg>
+                    </div>
+                    <div class="pcard-body">
+                        <div class="pcard-title">Core Logging App</div>
+                        <div class="pcard-desc">Smart AI-powered logging with offline support and seamless sync — beautifully designed for daily use.</div>
+                        <div class="pcard-divider"></div>
+                        <div class="pcard-cta">
+                            <a href="#" class="pcard-link">Learn more <span class="pcard-link-arrow">↗</span></a>
+                            <span class="pcard-tag">App · AI</span>
+                        </div>
+                    </div>
+                    <svg class="pcard-corner-deco" viewBox="0 0 90 90" fill="none"><circle cx="90" cy="90" r="80" stroke="#e2e8f0" stroke-width="1.5"/><circle cx="90" cy="90" r="50" stroke="#e2e8f0" stroke-width="1.5"/></svg>
+                </div>
+
+                <!-- Card 3: AllTik -->
+                <div class="pcard pcard-3">
+                    <div class="pcard-icon icon-chat">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M4 4h16v11H7l-3 3V4z" />
+                            <path d="M8 9h8" stroke-linecap="round" />
+                            <path d="M8 13h5" stroke-linecap="round" />
+                        </svg>
+                    </div>
+                    <div class="pcard-body">
+                        <div class="pcard-title">AllTik</div>
+                        <div class="pcard-desc">Sensory research platform with instant access to our built-in network and community agents.</div>
+                        <div class="pcard-divider"></div>
+                        <div class="pcard-cta">
+                            <a href="#" class="pcard-link">Learn more <span class="pcard-link-arrow">↗</span></a>
+                            <span class="pcard-tag">Community</span>
+                        </div>
+                    </div>
+                    <svg class="pcard-corner-deco" viewBox="0 0 90 90" fill="none"><circle cx="90" cy="90" r="80" stroke="#e2e8f0" stroke-width="1.5"/><circle cx="90" cy="90" r="50" stroke="#e2e8f0" stroke-width="1.5"/></svg>
+                </div>
+
+                <!-- Card 4: CBSupport -->
+                <div class="pcard pcard-4">
+                    <div class="pcard-icon icon-support">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M4 15v-3a8 8 0 0 1 16 0v3" />
+                            <path d="M8 15H6a2 2 0 0 1-2-2v-2a8 8 0 0 1 16 0v2a2 2 0 0 1-2 2h-2" />
+                            <path d="M12 19v2" />
+                        </svg>
+                    </div>
+                    <div class="pcard-body">
+                        <div class="pcard-title">CBSupport</div>
+                        <div class="pcard-desc">Structured tracking and direct insight exchange with our specialist team — real support, when you need it most.</div>
+                        <div class="pcard-divider"></div>
+                        <div class="pcard-cta">
+                            <a href="#" class="pcard-link">Learn more <span class="pcard-link-arrow">↗</span></a>
+                            <span class="pcard-tag">Support · Care</span>
+                        </div>
+                    </div>
+                    <svg class="pcard-corner-deco" viewBox="0 0 90 90" fill="none"><circle cx="90" cy="90" r="80" stroke="#e2e8f0" stroke-width="1.5"/><circle cx="90" cy="90" r="50" stroke="#e2e8f0" stroke-width="1.5"/></svg>
+                </div>
+
+                <!-- Card 5: Research Hub -->
+                <div class="pcard pcard-5">
+                    <div class="pcard-icon icon-research">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M6 18V9" />
+                            <path d="M10 18V6" />
+                            <path d="M14 18v-4" />
+                            <path d="M18 18v-2" />
+                            <path d="M4 20h16" />
+                        </svg>
+                    </div>
+                    <div class="pcard-body">
+                        <div class="pcard-title">Research & Insights Hub</div>
+                        <div class="pcard-desc">Deep analytics, community knowledge graphs, and timely data to inform your wellbeing decisions.</div>
+                        <div class="pcard-divider"></div>
+                        <div class="pcard-cta">
+                            <a href="#" class="pcard-link">Learn more <span class="pcard-link-arrow">↗</span></a>
+                            <span class="pcard-tag">Data · Insights</span>
+                        </div>
+                    </div>
+                    <svg class="pcard-corner-deco" viewBox="0 0 90 90" fill="none"><circle cx="90" cy="90" r="80" stroke="#e2e8f0" stroke-width="1.5"/><circle cx="90" cy="90" r="50" stroke="#e2e8f0" stroke-width="1.5"/></svg>
+                </div>
+
+                <!-- Card 6: Social Listening -->
+                <div class="pcard pcard-6">
+                    <div class="pcard-icon icon-social">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M4 15c3-3 5-6 9-6s6 3 9 6" />
+                            <path d="M4 19c3-3 5-6 9-6s6 3 9 6" />
+                            <path d="M5 6h14" />
+                            <path d="M5 10h5" />
+                        </svg>
+                    </div>
+                    <div class="pcard-body">
+                        <div class="pcard-title">Social Listening Dashboard</div>
+                        <div class="pcard-desc">Real-time UX tracking and social signal processing — understand community norms as they evolve.</div>
+                        <div class="pcard-divider"></div>
+                        <div class="pcard-cta">
+                            <a href="#" class="pcard-link">Learn more <span class="pcard-link-arrow">↗</span></a>
+                            <span class="pcard-tag">Social · UX</span>
+                        </div>
+                    </div>
+                    <svg class="pcard-corner-deco" viewBox="0 0 90 90" fill="none"><circle cx="90" cy="90" r="80" stroke="#e2e8f0" stroke-width="1.5"/><circle cx="90" cy="90" r="50" stroke="#e2e8f0" stroke-width="1.5"/></svg>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-sep"></div>
+
+    <!-- Accessibility Features — REDESIGNED -->
+    <section class="accessibility-section section-overlay-offwhite">
+        <div class="container">
+            <div class="section-header">
+                <div class="eyebrow">♿ Accessibility</div>
+                <h2>Built for every mind &amp; body</h2>
+                <p>Every feature is designed to reduce cognitive load and improve comfort for neurodivergent users.</p>
+            </div>
+
+            <div class="access-grid">
+                <!-- Dark Mode -->
+                <div class="access-card ac-moon">
+                    <div class="access-icon-wrap ai-moon">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 3a7 7 0 0 0 0 14 7.5 7.5 0 0 1 0-14z" />
+                            <path d="M16 2.5a9.5 9.5 0 0 1 0 19" />
+                        </svg>
+                    </div>
+                    <div class="access-card-title">Dark Mode</div>
+                    <div class="access-card-desc">Reduces eye strain with a fully adaptive dark theme that responds to your system preference or manual toggle — no harsh whites.</div>
+                    <div class="access-card-footer">
+                        <span class="access-status">System default</span>
+                        <div class="toggle-pill on" onclick="this.classList.toggle('on')">
+                            <div class="toggle-knob"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reduced Motion -->
+                <div class="access-card ac-motion">
+                    <div class="access-icon-wrap ai-motion">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 4v16" />
+                            <path d="M4 12h16" />
+                            <path d="M7 7l3 3" />
+                            <path d="M14 14l3 3" />
+                        </svg>
+                    </div>
+                    <div class="access-card-title">Reduced Motion</div>
+                    <div class="access-card-desc">Minimizes animations and transitions across the platform — respects your OS preference or can be set independently.</div>
+                    <div class="access-card-footer">
+                        <span class="access-status">Motion reduced</span>
+                        <div class="toggle-pill" onclick="this.classList.toggle('on')">
+                            <div class="toggle-knob"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- High Contrast -->
+                <div class="access-card ac-contrast">
+                    <div class="access-icon-wrap ai-contrast">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z" />
+                            <circle cx="12" cy="12" r="3" />
+                        </svg>
+                    </div>
+                    <div class="access-card-title">High Contrast</div>
+                    <div class="access-card-desc">Enhanced contrast ratios across all UI elements — fully certified to WCAG AA and AAA standards for visual clarity.</div>
+                    <div class="access-card-footer">
+                        <span class="wcag-badge">WCAG AAA</span>
+                        <div class="toggle-pill" onclick="this.classList.toggle('on')">
+                            <div class="toggle-knob"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dyslexia Fonts -->
+                <div class="access-card ac-dyslexia">
+                    <div class="access-icon-wrap ai-dyslexia">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M6 17V7h3" />
+                            <path d="M6 10h3" />
+                            <path d="M12 17l2-10h2" />
+                            <path d="M16 17h-4" />
+                        </svg>
+                    </div>
+                    <div class="access-card-title">Dyslexia-Friendly Fonts</div>
+                    <div class="access-card-desc">Switch to OpenDyslexic or other dyslexia-optimised typefaces with a single tap — platform-wide, instantly.</div>
+                    <div class="access-card-footer">
+                        <span class="access-status">3 font options</span>
+                        <div class="toggle-pill" onclick="this.classList.toggle('on')">
+                            <div class="toggle-knob"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Screen Reader -->
+                <div class="access-card ac-reader">
+                    <div class="access-icon-wrap ai-reader">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M5 9v6h4l5 4V5L9 9H5z" />
+                            <path d="M16.5 8.5a5 5 0 0 1 0 7" />
+                            <path d="M18.5 6.5a9 9 0 0 1 0 11" />
+                        </svg>
+                    </div>
+                    <div class="access-card-title">Screen Reader Ready</div>
+                    <div class="access-card-desc">Full ARIA labelling, semantic HTML, and keyboard navigation throughout — compatible with NVDA, VoiceOver, and JAWS.</div>
+                    <div class="access-card-footer">
+                        <span class="wcag-badge">ARIA 1.2</span>
+                        <div class="toggle-pill on" onclick="this.classList.toggle('on')">
+                            <div class="toggle-knob"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Customizable UI -->
+                <div class="access-card ac-ui">
+                    <div class="access-icon-wrap ai-ui">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z" />
+                            <path d="M4.5 12h2" />
+                            <path d="M17.5 12h2" />
+                            <path d="M7.05 7.05l1.5 1.5" />
+                            <path d="M15.45 15.45l1.5 1.5" />
+                            <path d="M7.05 16.95l1.5-1.5" />
+                            <path d="M15.45 8.55l1.5-1.5" />
+                        </svg>
+                    </div>
+                    <div class="access-card-title">Customizable UI</div>
+                    <div class="access-card-desc">Adjust font size, spacing, color temperature, and layout density to match your unique sensory and cognitive preferences.</div>
+                    <div class="access-card-footer">
+                        <span class="access-status">12 settings</span>
+                        <div class="toggle-pill on" onclick="this.classList.toggle('on')">
+                            <div class="toggle-knob"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-sep"></div>
+
+    <!-- How NuroTok Works -->
+    <section class="how-it-works section-overlay-white">
+        <div class="container">
+            <div class="section-header">
+                <div class="eyebrow">How it works</div>
+                <h2>How NuroTok works</h2>
+                <p>Your smart support environment adapts to your unique needs in four simple steps.</p>
+            </div>
+            <div class="steps-container">
+                <div class="step">
+                    <div class="step-num-wrap"><span class="step-num">01</span></div>
+                    <div class="step-icon">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" />
+                            <path d="M4 20c0-4 3-6 8-6s8 2 8 6" />
+                        </svg>
+                    </div>
+                    <h4>Create your sensory profile</h4>
+                    <p>Tell us about your preferences and needs. Customize notifications, themes, and interaction styles to match how you work best.</p>
+                </div>
+                <div class="step">
+                    <div class="step-num-wrap"><span class="step-num">02</span></div>
+                    <div class="step-icon">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z" />
+                        </svg>
+                    </div>
+                    <h4>Access personalized tools</h4>
+                    <p>Your dashboard surfaces the tools most relevant to you, arranged for minimal cognitive friction.</p>
+                </div>
+                <div class="step">
+                    <div class="step-num-wrap"><span class="step-num">03</span></div>
+                    <div class="step-icon">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M4 17l4-4 3 3 7-7" />
+                            <path d="M20 6v12H4V6h16z" />
+                        </svg>
+                    </div>
+                    <h4>Track insights &amp; wellbeing</h4>
+                    <p>Log your day and review insights. Neural metrics help you spot patterns and understand your own rhythms.</p>
+                </div>
+                <div class="step">
+                    <div class="step-num-wrap"><span class="step-num">04</span></div>
+                    <div class="step-icon">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M7 11a4 4 0 1 1 8 0 4 4 0 0 1-8 0z" />
+                            <path d="M2 21c0-4 3-6 7-6s7 2 7 6" />
+                            <path d="M17 11a3 3 0 1 1 6 0 3 3 0 0 1-6 0z" />
+                            <path d="M14 21c0-3 2-4 5-4s5 1 5 4" />
+                        </svg>
+                    </div>
+                    <h4>Connect with community</h4>
+                    <p>Join peer groups, share strategies, and find support from people who truly understand your experience.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-sep"></div>
+
+    <!-- Core Service Cards -->
+    <section class="services-section section-overlay-offwhite">
+        <div class="container" style="padding-top:80px;">
+            <div class="section-header">
+                <div class="eyebrow">🚀 Get started</div>
+                <h2>Core Services</h2>
+                <p>Choose the path that fits your goals.</p>
+            </div>
+            <div class="grid-2x2">
+                <div class="service-card dark-blue">
+                    <div>
+                        <div class="service-card-icon">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z" />
+                                <path d="M12 6l-3 8 8-3-5 5z" />
+                            </svg>
+                        </div>
+                        <h3>Start your sensory journey</h3>
+                        <p>Build your profile, set your preferences, and begin exploring a platform shaped around your needs.</p>
+                    </div>
+                    <button class="btn-outline">Get started →</button>
+                </div>
+                <div class="service-card dark-brown">
+                    <div>
+                        <div class="service-card-icon">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="6" y="4" width="12" height="16" rx="2" />
+                                <path d="M9 9h6" />
+                                <path d="M9 13h4" />
+                                <path d="M9 17l2 2 4-4" />
+                            </svg>
+                        </div>
+                        <h3>Streamline care logging</h3>
+                        <p>Smart, structured logging that makes tracking your daily wellbeing feel effortless and meaningful.</p>
+                    </div>
+                    <button class="btn-outline">Try app logging →</button>
+                </div>
+                <div class="service-card gradient-brown">
+                    <div>
+                        <div class="service-card-icon">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M6 20V10" />
+                                <path d="M11 20V6" />
+                                <path d="M16 20V14" />
+                                <path d="M21 20V12" />
+                            </svg>
+                        </div>
+                        <h3>Access research data</h3>
+                        <p>Explore peer-reviewed insights, community data, and curated resources to inform your wellbeing.</p>
+                    </div>
+                    <button class="btn-outline">Explore research →</button>
+                </div>
+                <div class="service-card light-blue">
+                    <div>
+                        <div class="service-card-icon">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="6" cy="6" r="2" />
+                                <circle cx="18" cy="6" r="2" />
+                                <circle cx="12" cy="18" r="2" />
+                                <path d="M6 8v8" />
+                                <path d="M18 8v8" />
+                                <path d="M8 6h8" />
+                            </svg>
+                        </div>
+                        <h3>Implement inclusive technology</h3>
+                        <p>Bring sensory-aware digital tools into your organisation and support your team's diverse needs.</p>
+                    </div>
+                    <button class="btn-outline">Contribute →</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-sep"></div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <div class="footer-title">AltiTok</div>
+                <p>Designing sensory-aware digital tools that prioritize wellbeing and create calm, inclusive social experiences.</p>
+            </div>
+            <div class="footer-col">
+                <h5>Navigation</h5>
+                <ul>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Partners</a></li>
+                    <li><a href="#">YouTube</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Connect</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h5>Connect</h5>
+                <ul class="footer-contact-list">
+                    <li>
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4.5 6.5L12 12.5L19.5 6.5"/><path d="M4.5 6.5V17.5H19.5V6.5"/></svg>
+                        support@altitok.com
+                    </li>
+                    <li>
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M7 4H17C18.1046 4 19 4.89543 19 6V18C19 19.1046 18.1046 20 17 20H7C5.89543 20 5 19.1046 5 18V6C5 4.89543 5.89543 4 7 4Z"/><path d="M8.5 8.75H15.5"/><path d="M8.5 12H15.5"/><path d="M8.5 15.25H12.5"/></svg>
+                        +00 02 456 4500
+                    </li>
+                </ul>
+                <div class="footer-social-links">
+                    <a href="#">LinkedIn</a>
+                    <a href="#">Twitter</a>
+                    <a href="#">Instagram</a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h5>Newsletter</h5>
+                <p>Get updates on new features and accessibility improvements.</p>
+                <input type="email" placeholder="Your email" class="newsletter-input">
+                <button class="btn-subscribe">Subscribe</button>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div>© 2026 AltiTok. All rights reserved.</div>
+            <div class="footer-links">
+                <a href="#">Account & solutions</a>
+                <a href="#">Privacy policy</a>
+                <a href="#">Terms of Policy</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ============================================================
+         ANIMATED NEURON NETWORK — runs on canvas behind the page
+         ============================================================ -->
+    <script>
+    (function() {
+        const canvas = document.getElementById('neuron-bg');
+        const ctx = canvas.getContext('2d');
+
+        let W, H, nodes = [], animId;
+        const NODE_COUNT = 55;
+        const MAX_DIST = 160;
+        const NODE_SPEED = 0.28;
+
+        function resize() {
+            W = canvas.width  = window.innerWidth;
+            H = canvas.height = document.body.scrollHeight;
+        }
+
+        function mkNode() {
+            return {
+                x: Math.random() * W,
+                y: Math.random() * H,
+                vx: (Math.random() - 0.5) * NODE_SPEED,
+                vy: (Math.random() - 0.5) * NODE_SPEED,
+                r: Math.random() * 2.5 + 1.5,
+            };
+        }
+
+        function init() {
+            resize();
+            nodes = Array.from({ length: NODE_COUNT }, mkNode);
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, W, H);
+
+            // Draw edges
+            for (let i = 0; i < nodes.length; i++) {
+                for (let j = i + 1; j < nodes.length; j++) {
+                    const dx = nodes[i].x - nodes[j].x;
+                    const dy = nodes[i].y - nodes[j].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < MAX_DIST) {
+                        const alpha = (1 - dist / MAX_DIST) * 0.18;
+                        ctx.beginPath();
+                        ctx.moveTo(nodes[i].x, nodes[i].y);
+                        ctx.lineTo(nodes[j].x, nodes[j].y);
+                        ctx.strokeStyle = `rgba(100, 140, 200, ${alpha})`;
+                        ctx.lineWidth = 1;
+                        ctx.stroke();
+                    }
+                }
+            }
+
+            // Draw nodes
+            nodes.forEach(n => {
+                ctx.beginPath();
+                ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(80, 120, 190, 0.35)';
+                ctx.fill();
+                // Soft glow ring
+                ctx.beginPath();
+                ctx.arc(n.x, n.y, n.r + 2.5, 0, Math.PI * 2);
+                ctx.strokeStyle = 'rgba(80, 140, 220, 0.1)';
+                ctx.lineWidth = 1;
+                ctx.stroke();
+            });
+
+            // Move nodes
+            nodes.forEach(n => {
+                n.x += n.vx;
+                n.y += n.vy;
+                if (n.x < 0 || n.x > W) n.vx *= -1;
+                if (n.y < 0 || n.y > H) n.vy *= -1;
+            });
+
+            animId = requestAnimationFrame(draw);
+        }
+
+        window.addEventListener('resize', () => {
+            cancelAnimationFrame(animId);
+            init();
+            draw();
+        });
+
+        // Re-measure canvas height after fonts/images load
+        window.addEventListener('load', () => {
+            cancelAnimationFrame(animId);
+            resize();
+            draw();
+        });
+
+        init();
+        draw();
+    })();
+    </script>
+
+</body>
+</html>
