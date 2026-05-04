@@ -178,6 +178,101 @@
             fill: none;
         }
 
+        .hamburger-btn {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            border: 1px solid rgba(148,163,184,0.24);
+            background: rgba(255,255,255,0.95);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+            line-height: 0;
+            color: #334155;
+        }
+
+        .hamburger-btn:hover {
+            transform: translateY(-2px);
+            border-color: rgba(59,130,246,0.35);
+            box-shadow: 0 10px 24px rgba(59,130,246,0.12);
+        }
+
+        .hamburger-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .hamburger-btn span {
+            display: inline-block;
+            width: 18px;
+            height: 2px;
+            background: currentColor;
+            border-radius: 999px;
+            transition: transform 0.25s ease, opacity 0.25s ease;
+        }
+
+        .hamburger-btn span + span {
+            margin-top: 5px;
+        }
+
+        .drawer-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.35);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.25s ease;
+            z-index: 1050;
+        }
+
+        .drawer-backdrop.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-drawer {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: min(320px, 88%);
+            height: 100vh;
+            padding: 80px 24px 24px;
+            background: rgba(255,255,255,0.98);
+            border-left: 1px solid rgba(148,163,184,0.16);
+            box-shadow: -18px 0 44px rgba(15,23,42,0.12);
+            transform: translateX(100%);
+            transition: transform 0.28s ease;
+            z-index: 1100;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .mobile-drawer.open {
+            transform: translateX(0);
+        }
+
+        .drawer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .drawer-links a {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #334155;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(148,163,184,0.16);
+            transition: color 0.25s ease;
+        }
+
+        .drawer-links a:hover,
+        .drawer-links a.active {
+            color: #1e40af;
+        }
+
         .profile-btn { width: 44px; height: 44px; }
 
         /* ============================================================
@@ -1090,7 +1185,8 @@
         @media (max-width: 768px) {
             header { padding: 16px 20px; flex-wrap: wrap; gap: 16px; }
             .logo { flex: 1; }
-            nav.nav-links { display: none; } /* Hide nav on mobile, could add hamburger later */
+            nav.nav-links { display: none; }
+            .hamburger-btn { display: inline-flex; }
             .header-controls { gap: 8px; }
             .hero h1 { font-size: clamp(2.5rem, 6vw, 3.5rem); }
             .hero p { font-size: 0.95rem; }
@@ -1136,7 +1232,13 @@
                 </div>
             </a>
         </div>
-        
+
+        <button class="hamburger-btn" aria-label="Open navigation" aria-expanded="false" aria-controls="mobile-menu">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M4 7H20M4 12H20M4 17H20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+        </button>
+
         <nav class="nav-links">
             <a href="#" class="active">Home</a>
             <a href="#">Solutions</a>
@@ -1159,6 +1261,18 @@
             </button>
         </div>
     </header>
+
+    <div class="drawer-backdrop" aria-hidden="true"></div>
+    <aside class="mobile-drawer" id="mobile-menu" aria-hidden="true">
+        <nav class="drawer-links" aria-label="Mobile navigation">
+            <a href="#" class="active">Home</a>
+            <a href="#">Solutions</a>
+            <a href="#">Features</a>
+            <a href="#">Case Studies</a>
+            <a href="#">Help</a>
+            <a href="#">Blog</a>
+        </nav>
+    </aside>
 
     <!-- Hero -->
     <section class="hero">
@@ -1767,6 +1881,38 @@
 
         init();
         draw();
+    })();
+    </script>
+
+    <script>
+    (function() {
+        const menuBtn = document.querySelector('.hamburger-btn');
+        const mobileDrawer = document.getElementById('mobile-menu');
+        const backdrop = document.querySelector('.drawer-backdrop');
+
+        if (!menuBtn || !mobileDrawer || !backdrop) return;
+
+        const setDrawerState = (open) => {
+            mobileDrawer.classList.toggle('open', open);
+            backdrop.classList.toggle('open', open);
+            menuBtn.setAttribute('aria-expanded', open);
+            mobileDrawer.setAttribute('aria-hidden', !open);
+            backdrop.setAttribute('aria-hidden', !open);
+        };
+
+        const toggleDrawer = () => setDrawerState(!mobileDrawer.classList.contains('open'));
+
+        menuBtn.addEventListener('click', toggleDrawer);
+        backdrop.addEventListener('click', () => setDrawerState(false));
+        mobileDrawer.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => setDrawerState(false));
+        });
+
+        window.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && mobileDrawer.classList.contains('open')) {
+                setDrawerState(false);
+            }
+        });
     })();
     </script>
 
